@@ -1,1 +1,206 @@
-Hola
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Prompts</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-..." crossorigin="anonymous">
+</head>
+<body>
+
+<div class="container mt-5">
+    <h1 class="text-center">Generador de Prompts Educativos</h1>
+
+    <form id="promptForm" class="mt-4">
+        <div class="mb-3">
+            <label for="asignatura" class="form-label">¿Para qué área/asignatura es el plan de clase?</label>
+            <select class="form-select" id="asignatura" required>
+                <option value="" disabled selected>Selecciona una asignatura</option>
+                <option value="Ciencias naturales y educación ambiental">Ciencias naturales y educación ambiental</option>
+                <option value="Ciencias sociales, historia, geografía, constitución política y democracia">Ciencias sociales, historia, geografía, constitución política y democracia</option>
+                <option value="Educación artística">Educación artística</option>
+                <option value="Educación ética y en valores humanos">Educación ética y en valores humanos</option>
+                <option value="Educación física, recreación y deportes">Educación física, recreación y deportes</option>
+                <option value="Educación religiosa">Educación religiosa</option>
+                <option value="Humanidades, lengua castellana e idiomas extranjeros">Humanidades, lengua castellana e idiomas extranjeros</option>
+                <option value="Matemáticas">Matemáticas</option>
+                <option value="Tecnología e informática">Tecnología e informática</option>
+                <option value="Otra">Otra</option> <!-- Opción "Otra" añadida -->
+            </select>
+            <input type="text" id="otraAsignatura" class="form-control mt-2 hidden" placeholder="Especifica la asignatura"> <!-- Campo de texto oculto -->
+        </div>
+
+        <div class="mb-3">
+            <label for="grado" class="form-label">¿A qué grado pertenecen tus estudiantes?</label>
+            <select class="form-select" id="grado" required>
+                <option value="" disabled selected>Selecciona un grado</option>
+                <option value="Transición">Transición</option> <!-- Opción "Transición" añadida -->
+                <option value="Primero">Primero</option>
+                <option value="Segundo">Segundo</option>
+                <option value="Tercero">Tercero</option>
+                <option value="Cuarto">Cuarto</option>
+                <option value="Quinto">Quinto</option>
+                <option value="Sexto">Sexto</option>
+                <option value="Séptimo">Séptimo</option>
+                <option value="Octavo">Octavo</option>
+                <option value="Noveno">Noveno</option>
+                <option value="Décimo">Décimo</option>
+                <option value="Once">Once</option> <!-- Opción "Once" añadida -->
+            </select>
+        </div>
+
+        <div class='mb-3'>
+            <label for='metodologia' class='form-label'>¿Cuál es la metodología que utilizarás en la clase?</label>
+            <select class='form-select' id='metodologia' required>
+                <option value='' disabled selected>Selecciona una metodología</option>
+                <option value='Aprendizaje Basado en Proyectos'>Aprendizaje Basado en Proyectos (ABP)</option>
+                <option value='Aprendizaje Colaborativo'>Aprendizaje Colaborativo</option>
+                <option value='Enseñanza Directa'>Enseñanza Directa</option>
+                <option value='Aprendizaje Basado en Problemas'>Aprendizaje Basado en Problemas (ABP)</option>
+                <option value='Gamificación'>Gamificación</option>
+                <option value='Aula Invertida'>Aula Invertida</option> 
+                <option value='Otra'>Otra</option> <!-- Opción "Otra" añadida -->
+            </select> 
+            <input type="text" id="otraMetodologia" class="form-control mt-2 hidden" placeholder="Especifica la metodología"> <!-- Campo de texto oculto -->
+        </div>
+
+        <!-- Resto del formulario permanece igual -->
+        
+        <!-- Código JavaScript permanece igual -->
+        
+        <!-- Campo para intensidad -->
+        <div class="mb-3">
+            <label for="intensidad" class="form-label">¿Cuántas horas dedicarás al plan de clase?</label>
+            <input type="number" class="form-control" id="intensidad" required min="1">
+        </div>
+
+        <!-- Campo para tema -->
+        <div class="mb-3">
+            <label for="tema" class="form-label">Escribe el tema específico del plan:</label>
+            <input type="text" class="form-control" id="tema" required>
+        </div>
+
+        <!-- Campo para referentes -->
+        <div class='mb-3'>
+            <label for='referentes' class='form-label'>Que cumpla con el siguiente objetivo de aprendizaje, estándar o DBA (opcional):</label>
+            <input type='text' class='form-control' id='referentes'>
+        </div>
+
+        <!-- Campo para evaluación -->
+        <div class='mb-3'>
+            <label for='evaluacion' class='form-label'>¿Qué tipo de evaluación utilizarás en el plan?</label>
+            <select class='form-select' id='evaluacion' required>
+                <option value='' disabled selected>Selecciona un tipo de evaluación</option>
+                <option value='Formativa'>Formativa</option>
+                <option value='Sumativa'>Sumativa</option>
+                <option value='Diagnóstica'>Diagnóstica</option>
+            </select>
+        </div>
+
+        <!-- Botón para generar prompt -->
+        <button type='submit' class='btn btn-primary'>Generar Prompt</button>
+
+    </form>
+
+    <!-- Sección para mostrar el prompt generado -->
+    <h2 class='hidden mt-4'>Tu prompt generado es:</h2>
+    <pre id='generatedPrompt' class='hidden mt-3'></pre>
+    <!-- Botón para copiar prompt -->
+    <button id='copyButton' class='hidden btn btn-success mt-2'>Copiar Prompt</button>
+
+    <!-- Mensaje de error -->
+    <div id='errorMessage' class='alert alert-danger hidden mt-3'></div> 
+</div>
+
+<script src='https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js'></script>
+
+<script>
+// Mostrar u ocultar el campo "Otra asignatura"
+document.getElementById('asignatura').addEventListener('change', function() {
+    const otraAsignaturaInput = document.getElementById('otraAsignatura');
+    if (this.value === 'Otra') {
+        otraAsignaturaInput.classList.remove('hidden');
+    } else {
+        otraAsignaturaInput.classList.add('hidden');
+        otraAsignaturaInput.value = ''; // Limpiar el campo si no es "Otra"
+    }
+});
+
+// Mostrar u ocultar el campo "Otra metodología"
+document.getElementById('metodologia').addEventListener('change', function() {
+    const otraMetodologiaInput = document.getElementById('otraMetodologia');
+    if (this.value === 'Otra') {
+        otraMetodologiaInput.classList.remove('hidden');
+    } else {
+        otraMetodologiaInput.classList.add('hidden');
+        otraMetodologiaInput.value = ''; // Limpiar el campo si no es "Otra"
+    }
+});
+
+// Código JavaScript permanece igual
+document.getElementById('promptForm').addEventListener('submit', function(event) {
+    event.preventDefault(); // Evita el envío del formulario
+
+    // Obtiene los valores de los campos
+    const asignatura = document.getElementById('asignatura').value.trim() === 'Otra' 
+                      ? document.getElementById('otraAsignatura').value.trim() 
+                      : document.getElementById('asignatura').value.trim();
+    
+    const grado = document.getElementById('grado').value.trim();
+    
+    const metodologia = document.getElementById('metodologia').value.trim() === 'Otra'
+                      ? document.getElementById('otraMetodologia').value.trim()
+                      : document.getElementById('metodologia').value.trim();
+    
+    const intensidad = document.getElementById('intensidad').value.trim();
+    
+    const tema = document.getElementById('tema').value.trim();
+    
+    const referentes = document.getElementById('referentes').value.trim();
+    
+    const evaluacion = document.getElementById('evaluacion').value.trim();
+
+    // Validación de entradas
+    if (!asignatura || !grado || !metodologia || !intensidad || !tema || !evaluacion) {
+        document.getElementById('errorMessage').innerText = "Por favor, completa todos los campos obligatorios.";
+        document.getElementById('errorMessage').classList.remove('hidden');
+        return;
+    } else {
+        document.getElementById('errorMessage').classList.add('hidden');
+    }
+
+    // Generación del prompt
+    const prompt = `Crea un plan de clase para la asignatura de ${asignatura}, del grado ${grado}, `
+                 + `usando la metodología de ${metodologia}, con una intensidad de ${intensidad} horas. `
+                 + `El tema específico del plan es ${tema}, que cumpla con el siguiente objetivo de aprendizaje, `
+                 + `estándar o DBA (opcional): ${referentes}. Además, este plan de clase debe incluir recomendaciones para estudiantes de inclusión. `
+                 + `Para terminar, diseña una evaluación de tipo ${evaluacion}, que se adapte tanto a estudiantes regulares como a estudiantes con necesidades educativas especiales. `
+                 + `El formato debe ser creado en una tabla a dos columnas.`;
+
+    // Muestra el prompt generado
+    document.getElementById('generatedPrompt').innerText = prompt;
+    document.querySelector('h2').classList.remove('hidden');
+    document.getElementById('generatedPrompt').classList.remove('hidden');
+    
+    // Muestra el botón para copiar
+    document.getElementById('copyButton').classList.remove('hidden');
+
+    // Limpia el formulario
+    document.getElementById('promptForm').reset();
+});
+
+// Función para copiar el texto al portapapeles
+document.getElementById('copyButton').addEventListener('click', function() {
+    const promptText = document.getElementById('generatedPrompt').innerText;
+
+    navigator.clipboard.writeText(promptText).then(() => {
+        alert("Prompt copiado al portapapeles!");
+    }).catch(err => {
+        console.error("Error al copiar: ", err);
+        alert("Error al copiar el texto.");
+    });
+});
+</script>
+
+</body>
+</html>
